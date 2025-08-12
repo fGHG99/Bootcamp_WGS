@@ -1,0 +1,17 @@
+{
+  "name": "bootcamp-wgs",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "dir": "dir"
+  },
+  "keywords": [],
+  "author": "Azka",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "validator": "^13.15.15"
+  }
+}
