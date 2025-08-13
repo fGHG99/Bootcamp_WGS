@@ -7,14 +7,18 @@ const rl = readline.createInterface({
 });
 
 const question = (ask) => {
-    return new Promise((resolve, reject) => {
-        rl.question(ask, (answer) => {
-            if (validator.isEmpty(answer)) {
-                reject(new Error('Invalid input'));
-            } else {
-                resolve(answer);
-            }
-        });
+    return new Promise((resolve) => {
+        const askAgain = () => {
+            rl.question(ask, (answer) => {
+                if (validator.isEmpty(answer)) {
+                    console.error("Answer cannot be empty. Please try again.");
+                    askAgain();
+                } else {
+                    resolve(answer);
+                }
+            });
+        }
+        askAgain();
     });
 }
 
