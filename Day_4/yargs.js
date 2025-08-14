@@ -118,7 +118,7 @@ yargs(hideBin(process.argv))
               return console.error('Email tidak valid');
           }
 
-          fileHandler.writeFile('./data/data.json', data);
+          fileHandler.writeFile('./data/data.json', newData);
         }
     })
 .parse()
