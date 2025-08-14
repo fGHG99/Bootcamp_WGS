@@ -1,7 +1,11 @@
-const fs = require('fs')
+import fs from 'fs'
+const dirpath = './data';
 
 const fileHandler = {
-    readFile: (loc) => {
+    readFile(loc) {
+        if (!fs.existsSync(dirpath)) {
+            fs.mkdirSync(dirpath)
+        }
         if (!fs.existsSync(loc)) {
             fs.writeFileSync(loc, "[]");
             console.log("File not found, created a new file at ", loc);
@@ -9,13 +13,24 @@ const fileHandler = {
 
         return fs.readFileSync(loc, "utf-8");
     },
-    writeFile: (loc, data) => {
+    writeFile (loc, data) {
         if (!loc) {
             console.log("the file is null");
-            return;
         }
         fs.writeFileSync(loc, JSON.stringify(data, null, 2));
-    }
+    },
+    readFileArray(loc) {
+        if (!fs.existsSync(dirpath)) {
+            fs.mkdirSync(dirpath)
+        }
+        if (!fs.existsSync(loc)) {
+            fs.writeFileSync(loc, "[]");
+            console.log("File not found, created a new file at ", loc);
+        }
+
+        const content = fs.readFileSync(loc, "utf-8");
+        return JSON.parse(content);
+    },
 }
 
 const savingData = (filePath, data) => {
@@ -23,6 +38,7 @@ const savingData = (filePath, data) => {
     const jsonData = JSON.parse(file);
     jsonData.push(data);
     fileHandler.writeFile(filePath, jsonData);
+    console.log("Data saved successfully");
 }
 
-module.exports = { savingData, fileHandler };
+export { savingData, fileHandler };

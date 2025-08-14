@@ -8,10 +8,12 @@
     "dir": "dir"
   },
   "keywords": [],
+  "type": "module",
   "author": "Azka",
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "validator": "^13.15.15"
+    "validator": "^13.15.15",
+    "yargs": "^18.0.0"
   }
 }

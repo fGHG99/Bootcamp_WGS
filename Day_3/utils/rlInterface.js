@@ -1,7 +1,7 @@
-const readline = require('readline');
-const validator = require('validator');
+import readLine from 'readline';
+import validator from 'validator';
 
-const rl = readline.createInterface({
+const rl = readLine.createInterface({
   input: process.stdin,
   output: process.stdout
 });
@@ -22,6 +22,10 @@ const question = (ask) => {
     });
 }
 
-module.exports = {
-    question, rl
+const closeReadLine = () => {
+    rl.close();
+}
+
+export {
+    question, closeReadLine
 };

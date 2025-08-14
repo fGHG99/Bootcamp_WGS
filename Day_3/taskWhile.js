@@ -1,27 +1,26 @@
-const validator = require('validator');
-const { question, rl } = require('./utils/rlInterface');
-const { savingData } = require('./utils/fileHandler')
+import { closeReadLine, question } from './utils/rlInterface.js';
+import { savingData } from './utils/fileHandler.js';
+import { validatePhone, validateEmail } from './utils/validator.js';
 
 const main = async () => {
     const name = await question('What is your name? ');  
-   
+ 
     let mobile;
     let email;
-
     do {
         mobile = await question('What is your mobile number? ');
-        if (!validator.isMobilePhone(mobile, 'id-ID')) {
+        if (!validatePhone(mobile)) {
             console.error("Please enter a valid mobile number.");
         }
-    } while (!validator.isMobilePhone(mobile, 'id-ID'));
+    } while (!validatePhone(mobile));
 
     do {
         email = await question('What is your email address? ');
-        if (!validator.isEmail(email)) {
+        if (!validateEmail(email)) {
             console.error("Please enter a valid email address.");
         }
-    } while (!validator.isEmail(email));
-    
+    } while (!validateEmail(email));
+
      const data = {
         name,
         mobile,
@@ -29,8 +28,7 @@ const main = async () => {
     }
    
     savingData('./data/data.json', data);
-    console.log("Data saved successfully");
-    rl.close()
+    closeReadLine();
 }
 
 main();
