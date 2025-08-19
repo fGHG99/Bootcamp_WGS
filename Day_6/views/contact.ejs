@@ -1,0 +1,29 @@
+<%# include('layout/header.ejs') %>
+<%# include('layout/nav.ejs') %>
+    <h1>
+        this is contact page
+    </h1>
+    <% if (contact.length > 0) { %>
+     <table border="1" cellpadding="6" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Mobile</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% contact.forEach(c => { %>
+                <tr>
+                    <td><%= c.name %></td>
+                    <td><%= c.email %></td>
+                    <td><%= c.mobile %></td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+    <% } else {
+        %>
+        <p>No contact information available.</p>
+    <% } %>
+<%# include('layout/footer.ejs') %>
