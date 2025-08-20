@@ -1,0 +1,15 @@
+<% if (typeof errors !== "undefined" && errors.length > 0) { %>
+  <div class="alert alert-danger alert-dismissible" id="notification">
+    <button type="button" onclick="document.getElementById('notification').style.display='none'" style="float:right; border:none; background:none; font-size:16px; cursor:pointer;">&times;</button>
+    <ul>
+      <% errors.forEach(function(error) { %>
+        <li><%= error %></li>
+      <% }) %>
+    </ul>
+  </div>
+<% } else if (typeof success !== "undefined" && success) { %>
+  <div class="alert alert-success alert-dismissible" id="notification">
+    <button type="button" onclick="document.getElementById('notification').style.display='none'" style="float:right; border:none; background:none; font-size:16px; cursor:pointer;">&times;</button>
+    Successfully added new contact
+  </div>
+<% } %>

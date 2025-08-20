@@ -41,4 +41,9 @@ const savingData = (filePath, data) => {
     console.log("Data saved successfully");
 }
 
-export { savingData, fileHandler };
+const updateData = (path, data) => {
+    fileHandler.writeFile(path, data);
+    console.log('data updated')
+}
+
+export { savingData, fileHandler, updateData };

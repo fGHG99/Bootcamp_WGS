@@ -103,7 +103,6 @@ yargs(hideBin(process.argv))
         },
         handler(argv) {
           const newData = fileHandler.readFileArray('./data/data.json');
-          console.log(newData);
           const index = newData.findIndex(contact => contact.email === argv.email);
           console.log(index)
           if (index === -1) {

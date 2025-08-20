@@ -1,29 +1,55 @@
-<%# include('layout/header.ejs') %>
-<%# include('layout/nav.ejs') %>
-    <h1>
-        this is contact page
-    </h1>
-    <% if (contact.length > 0) { %>
-     <table border="1" cellpadding="6" cellspacing="0">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Mobile</th>
-                <th>Email</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% contact.forEach(c => { %>
-                <tr>
-                    <td><%= c.name %></td>
-                    <td><%= c.email %></td>
-                    <td><%= c.mobile %></td>
-                </tr>
-            <% }) %>
-        </tbody>
-    </table>
-    <% } else {
-        %>
-        <p>No contact information available.</p>
-    <% } %>
-<%# include('layout/footer.ejs') %>
+<%- include('./utils/contactStyle.ejs') %>
+<button class="btn add-btn" onclick="openModal('addModal')">
+  Add New Contact
+</button>
+<!-- Add Contact Modal -->
+<%- include('./utils/addModal.ejs') %>
+<!-- Edit Contact Modal -->
+<%- include('./utils/contactSc.ejs') %>
+<h1>Contact Management</h1>
+<%- include('./utils/notification.ejs') %> <% if (contact.length > 0) { %>
+<table>
+  <thead>
+    <tr>
+      <th>No</th>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% contact.forEach((c, i) => { %>
+    <tr>
+      <td><%= i + 1 %></td>
+      <td><%= c.name %></td>
+      <td><%= c.email %></td>
+      <td>
+        <button
+          class="btn detail-btn"
+          onclick="showDetail('<%= i + 1 %>', '<%= c.name %>', '<%= c.email %>', '<%= c.mobile %>')"
+          data-bs-toggle="modal"
+          data-bs-target="#detailModal"
+        >
+          Detail
+        </button>
+        <button
+          class="btn edit-btn"
+          onclick="editContact('<%= i %>', '<%= c.name %>', '<%= c.email %>', '<%= c.mobile %>')"
+        >
+          Edit
+        </button>
+        <button class="btn delete-btn" onclick="deleteContact('<%= i %>')"
+          data-bs-toggle="">
+          Delete
+        </button>
+      </td>
+    </tr>
+    
+    <%- include('./utils/deleteModal.ejs') %>
+    <%- include('./utils/detailModal.ejs') %> <% }) %> 
+    <%- include('./utils/editModal.ejs') %>
+  </tbody>
+</table>
+<% } else { %>
+<p>No contact information available.</p>
+<% } %> <%- include('./utils/contactSc.ejs') %>

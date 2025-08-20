@@ -1,0 +1,39 @@
+<script>
+  function openModal(modalId) {
+    document.getElementById(modalId).style.display = "block";
+  }
+
+  function closeModal(modalId) {
+    document.getElementById(modalId).style.display = "none";
+  }
+
+ function editContact(index, name, email, mobile) {
+    document.getElementById("editModal").style.display = "block";
+    document.getElementById("edit-id").value = index;
+    document.getElementById("edit-name").value = name;
+    document.getElementById("edit-email").value = email;
+    document.getElementById("edit-mobile").value = mobile;
+
+    // update form action sesuai id contact
+    document.getElementById("editForm").action = `/contact/edit/${index}`;
+  }
+
+  function showDetail(index, name, email, mobile) {
+    document.getElementById("detail-id").innerText = index;
+    document.getElementById("detail-name").innerText = name;
+    document.getElementById("detail-email").innerText = email || "-";
+    document.getElementById("detail-mobile").innerText = mobile || "-";
+  }
+
+ function deleteContact(index) {
+    document.getElementById("deleteModal").style.display = "block";
+    document.getElementById("deleteForm").action = `/contact/delete/${index}`;
+  }
+
+  // Close modal when clicking outside
+  window.onclick = function (event) {
+    if (event.target.className === "modal") {
+      event.target.style.display = "none";
+    }
+  };
+</script>

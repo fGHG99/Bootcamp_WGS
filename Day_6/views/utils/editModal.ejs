@@ -1,0 +1,16 @@
+<!-- Edit Modal -->
+<div id="editModal" class="modal" style="display:none;">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('editModal')">&times;</span>
+    <h2>Edit Contact</h2>
+
+    <form id="editForm" method="POST">
+      <input type="hidden" id="edit-id" name="id">
+      <input type="text" id="edit-name" name="username" placeholder="Name">
+      <input type="email" id="edit-email" name="email" placeholder="Email">
+      <input type="text" id="edit-mobile" name="mobile" placeholder="Mobile">
+      <div id="edit-errors" style="color:red;"></div>
+      <button type="submit">Save</button>
+    </form>
+  </div>
+</div>

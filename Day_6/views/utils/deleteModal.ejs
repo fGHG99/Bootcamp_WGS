@@ -1,0 +1,12 @@
+<div id="deleteModal" class="modal" style="display:none;" data-bs-backdrop="false">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('deleteModal')">&times;</span>
+    <h2>Delete Contact</h2>
+    <p>Apakah kamu yakin ingin menghapus kontak ini?</p>
+    <form id="deleteForm" method="POST">
+      <input type="hidden" id="delete-id" name="id">
+      <button type="submit" class="btn-danger">Delete</button>
+      <button type="button" onclick="closeModal('deleteModal')">Cancel</button>
+    </form>
+  </div>
+</div>
