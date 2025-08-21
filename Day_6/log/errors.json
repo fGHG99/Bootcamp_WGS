@@ -1,0 +1,20 @@
+[
+  {
+    "method": "GET",
+    "url": "/favicon.ico",
+    "status": 404,
+    "time": "2025-08-21T04:24:13.754Z"
+  },
+  {
+    "method": "GET",
+    "url": "/favicon.ico",
+    "status": 404,
+    "time": "2025-08-21T04:25:31.223Z"
+  },
+  {
+    "method": "GET",
+    "url": "/123",
+    "status": 404,
+    "time": "2025-08-21T04:25:34.702Z"
+  }
+]

@@ -1,15 +1,17 @@
-<% if (typeof errors !== "undefined" && errors.length > 0) { %>
-  <div class="alert alert-danger alert-dismissible" id="notification">
-    <button type="button" onclick="document.getElementById('notification').style.display='none'" style="float:right; border:none; background:none; font-size:16px; cursor:pointer;">&times;</button>
+<% if (errors && errors.length > 0) { %>
+  <div class="notification" style="background:#e53935">
     <ul>
-      <% errors.forEach(function(error) { %>
-        <li><%= error %></li>
+      <% errors.forEach(err => { %>
+        <li><%= err %></li>
       <% }) %>
     </ul>
+    <button class="close-btn" onclick="this.parentElement.style.display='none'">×</button>
   </div>
-<% } else if (typeof success !== "undefined" && success) { %>
-  <div class="alert alert-success alert-dismissible" id="notification">
-    <button type="button" onclick="document.getElementById('notification').style.display='none'" style="float:right; border:none; background:none; font-size:16px; cursor:pointer;">&times;</button>
-    Successfully added new contact
+<% } %>
+
+<% if (successMsg) { %>
+  <div class="notification" style="background:#4caf50">
+    <%= successMsg %>
+    <button class="close-btn" onclick="this.parentElement.style.display='none'">×</button>
   </div>
 <% } %>

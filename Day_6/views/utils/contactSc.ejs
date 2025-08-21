@@ -7,30 +7,27 @@
     document.getElementById(modalId).style.display = "none";
   }
 
- function editContact(index, name, email, mobile) {
+ function editContact(id, name, email, mobile) {
     document.getElementById("editModal").style.display = "block";
-    document.getElementById("edit-id").value = index;
+    document.getElementById("edit-id").value = id;
     document.getElementById("edit-name").value = name;
     document.getElementById("edit-email").value = email;
     document.getElementById("edit-mobile").value = mobile;
-
-    // update form action sesuai id contact
-    document.getElementById("editForm").action = `/contact/edit/${index}`;
+    document.getElementById("editForm").action = `/contact/edit/${id}`;
   }
 
-  function showDetail(index, name, email, mobile) {
-    document.getElementById("detail-id").innerText = index;
+  function showDetail(id, name, email, mobile) {
+    document.getElementById("detail-id").innerText = id;
     document.getElementById("detail-name").innerText = name;
     document.getElementById("detail-email").innerText = email || "-";
     document.getElementById("detail-mobile").innerText = mobile || "-";
   }
 
- function deleteContact(index) {
+ function deleteContact(id) {
     document.getElementById("deleteModal").style.display = "block";
-    document.getElementById("deleteForm").action = `/contact/delete/${index}`;
+    document.getElementById("deleteForm").action = `/contact/delete/${id}`;
   }
 
-  // Close modal when clicking outside
   window.onclick = function (event) {
     if (event.target.className === "modal") {
       event.target.style.display = "none";

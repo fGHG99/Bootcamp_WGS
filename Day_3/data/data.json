@@ -1,57 +1,50 @@
 [
   {
-    "name": "test deui meuren ah",
-    "email": "asd@asd.com",
+    "id": 1,
+    "name": "azka-test",
+    "email": "asd@asd123.com",
     "mobile": "081321198388"
   },
   {
-    "name": "asd",
-    "email": "asd@asd.com",
-    "mobile": "08132119838"
+    "id": 2,
+    "name": "test-delete",
+    "email": "asd@gmail.com",
+    "mobile": "081321198388",
+    "isDeleted": true
   },
   {
-    "name": "lu",
+    "id": 3,
+    "name": "test-index",
     "email": "asd@asd.com",
-    "mobile": "081321198388"
+    "mobile": "081321198388",
+    "isDeleted": true
   },
   {
-    "name": "test1",
+    "id": 4,
+    "name": "test-notification",
     "email": "asd@asd.com",
-    "mobile": "082260118353"
+    "mobile": "081321198388",
+    "isDeleted": true
   },
   {
-    "name": "akza",
-    "email": "asd@asd.com",
-    "mobile": "081321198388"
-  },
-  {
+    "id": 5,
     "name": "azka",
-    "email": "asd@asd.com",
-    "mobile": "081321198388"
+    "email": "asd@gmail.com",
+    "mobile": "081321198388",
+    "isDeleted": true
   },
   {
-    "name": "asdasd",
+    "id": 6,
+    "name": "test-edit-notif",
     "email": "asd@asd.com",
-    "mobile": "08132119838"
+    "mobile": "081321198388",
+    "isDeleted": true
   },
   {
-    "name": "hhhh",
-    "email": "asd@asd.com",
-    "mobile": "081321198388"
-  },
-  {
-    "name": "tesstst",
-    "email": "asd@asd.com",
-    "mobile": "081321198388"
-  },
-  {
-    "name": "asdaskd",
-    "email": "asd@asd.com",
-    "mobile": "081321198388"
-  },
-  {
-    "name": "efarn",
-    "email": "asd@asd.com",
-    "mobile": "081321198388"
+    "id": 7,
+    "name": "new data",
+    "email": "asd@gmail.com",
+    "mobile": "081321198388",
+    "isDeleted": false
   }
 ]
