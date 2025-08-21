@@ -2,9 +2,16 @@ import express from "express";
 import expressLayouts from "express-ejs-layouts";
 const app = express();
 import morgan from "morgan";
-import { fileHandler, savingData, updateData } from "../Day_3/utils/fileHandler.js";
+import {
+  fileHandler,
+} from "../Day_3/utils/fileHandler.js";
 import { validateEmail, validatePhone } from "../Day_3/utils/validator.js";
-import { pool }  from './views/utils/db/db.js'
+import {
+  loadContact,
+  createContact,
+  editContact,
+  deleteContact
+} from "./views/utils/db/contactApi.js";
 
 app.set("view engine", "ejs");
 app.set("views", "./views");
@@ -15,18 +22,7 @@ app.use(express.json());
 
 const PORT = 8080;
 const ipAddress = "localhost";
-const datapath = "../Day_3/data/data.json";
 const logPath = "./log/errors.json";
-
-async function loadContact() {
-  try {
-    const { rows: contact } = await pool.query("SELECT * FROM contact WHERE \"isDeleted\" = false");
-    return contact;
-  } catch (err) {
-    console.error(err.message);
-    return [];
-  }
-}
 
 app.use(express.static("public"));
 
@@ -73,116 +69,112 @@ app.get("/about", (req, res) => {
   res.render("about", { title: "About Page", activePage: "about" });
 });
 
-// app.get("/contact", (req, res) => {
-//   const contacts = fileHandler.readFileArray(datapath).filter(c => !c.isDeleted);
-
-//   res.render("contact", {
-//     contact: contacts,
-//     errors: null,
-//     successMsg: req.query.success || null, 
-//     title: "Contact Page",
-//     activePage: "contact"
-//   });
-// });
-
 app.get("/contact", async (req, res) => {
   const contacts = await loadContact();
   res.render("contact", {
     contact: contacts,
     errors: null,
-    successMsg: req.query.success || null, 
+    old: {},
+    showAddModal: false,
+    showEditModal: false,
+    successMsg: req.query.success || null,
     title: "Contact Page",
-    activePage: "contact"
+    activePage: "contact",
   });
 });
 
-
-app.post("/contact/input", (req, res) => {
+app.post("/contact/input", async (req, res) => {
   const { name, email, mobile } = req.body;
-  const contacts = fileHandler.readFileArray(datapath);
   const errors = [];
+  const existingContact = await loadContact();
 
-  if (contacts.find((c) => c.name === name && !c.isDeleted)) {
-    errors.push("Name already exists");
+  if (existingContact.find((c) => c.name === name && !c.isDeleted)) {
+    errors.push({ param: "name", msg: "Name already exist" });
   }
   if (!validateEmail(email)) {
-    errors.push("Invalid email format");
+    errors.push({ param: "email", msg: "Invalid email format" });
   }
   if (!validatePhone(mobile)) {
-    errors.push("Invalid mobile number");
+    errors.push({ param: "mobile", msg: "Invalid mobile number" });
   }
+
+  const errorObj = {};
+  if (Array.isArray(errors)) {
+    errors.forEach((err) => {
+      errorObj[err.param] = err.msg;
+    });
+  }
+
   if (errors.length > 0) {
     return res.status(400).render("contact", {
-      contact: contacts.filter(c => !c.isDeleted),
-      errors,
+      contact: existingContact.filter((c) => !c.isDeleted),
+      errors: errorObj,
+      old: {
+        name,
+        email,
+        mobile,
+      },
+      showAddModal: true,
+      showEditModal: false, // <-- tambahin default
       successMsg: null,
       title: "Contact Page",
       activePage: "contact",
     });
   }
-  let newId = 1;
-  if (contacts.length > 0) {
-    const lastId = Math.max(...contacts.map(c => c.id || 0));
-    newId = lastId + 1;
-  }
-  const contact = { id: newId, name, email, mobile, isDeleted: false };
-  savingData(datapath, contact);
+
+  await createContact(name, email, mobile);
   res.redirect("/contact?success=Data successfully added");
 });
 
-
-app.post("/contact/edit/:id", (req, res) => {
-  const { id } = req.params; 
-  const { username, email, mobile } = req.body;
-  const contacts = fileHandler.readFileArray(datapath);
-  const contact = contacts.find((c) => String(c.id) === String(id));
+app.post("/contact/edit/:id", async (req, res) => {
+  const { id } = req.params;
+  const { name, email, mobile } = req.body;
+  const contacts = await loadContact();
   const errors = [];
 
-  // cek apakah contact ada
-  if (!contact) {
-    return res.status(404).json({ success: false, message: "Contact not found" });
+  // === Validation ===
+  if (contacts.find(c => c.name === name && c.id !== id && !c.isDeleted)) {
+    errors.push({ param: "name", msg: "Name already exist" });
   }
+  if (!validateEmail(email)) errors.push({ param: "email", msg: "Invalid email format" });
+  if (!validatePhone(mobile)) errors.push({ param: "mobile", msg: "Invalid mobile number" });
 
-  // validasi input
-  if (!validateEmail(email)) {
-    errors.push("Invalid email format");
-  }
-  if (!validatePhone(mobile)) {
-    errors.push("Invalid phone number");
-  }
-
+  // === Handle Errors ===
   if (errors.length > 0) {
-    console.log(errors);
+    const errorObj = errors.reduce((acc, err) => {
+      acc[err.param] = err.msg;
+      return acc;
+    }, {});
+
     return res.status(400).render("contact", {
-      contact: contacts, // kirim semua data contact untuk view
-      errors,
+      contact: contacts.filter(c => !c.isDeleted),
+      editErrors: errorObj,   // khusus edit modal
+      oldEdit: { id, name, email, mobile }, // isi ulang form
+      showEditModal: true,
+      showAddModal: false, // <-- tambahin default
       successMsg: null,
       title: "Contact Page",
-      activePage: "contact",
+      activePage: "contact"
     });
   }
 
-  // update langsung contact yang ketemu
-  contact.name = username;
-  contact.email = email;
-  contact.mobile = mobile;
-
-  updateData(datapath, contacts);
+  // === Update Contact ===
+  await editContact(id, name, email, mobile);
   res.redirect("/contact?success=Data successfully Modified");
 });
 
-
-app.post("/contact/delete/:id", (req, res) => {
+app.post("/contact/delete/:id", async (req, res) => {
   const { id } = req.params; // ambil id dari URL
-  const contacts = fileHandler.readFileArray(datapath);
+  const contacts = await loadContact();
   const contact = contacts.find((c) => String(c.id) === String(id));
 
   if (!contact) {
-    return res.status(404).json({ success: false, message: "Contact not found" });
+    return res
+      .status(404)
+      .json({ success: false, message: "Contact not found" });
   }
 
-  contact.isDeleted = true;
-  updateData(datapath, contacts);
+  await deleteContact(id);
   res.redirect("/contact?success=Data successfully Deleted");
 });
 

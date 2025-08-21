@@ -1,14 +1,3 @@
-<% if (errors && errors.length > 0) { %>
-  <div class="notification" style="background:#e53935">
-    <ul>
-      <% errors.forEach(err => { %>
-        <li><%= err %></li>
-      <% }) %>
-    </ul>
-    <button class="close-btn" onclick="this.parentElement.style.display='none'">×</button>
-  </div>
-<% } %>
-
 <% if (successMsg) { %>
   <div class="notification" style="background:#4caf50">
     <%= successMsg %>
