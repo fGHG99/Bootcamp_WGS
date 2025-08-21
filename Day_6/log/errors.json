@@ -16,5 +16,29 @@
     "url": "/123",
     "status": 404,
     "time": "2025-08-21T04:25:34.702Z"
+  },
+  {
+    "method": "GET",
+    "url": "/favicon.ico",
+    "status": 404,
+    "time": "2025-08-21T05:07:47.941Z"
+  },
+  {
+    "method": "GET",
+    "url": "/favicon.ico",
+    "status": 404,
+    "time": "2025-08-21T05:08:11.181Z"
+  },
+  {
+    "method": "GET",
+    "url": "/favicon.ico",
+    "status": 404,
+    "time": "2025-08-21T05:08:34.883Z"
+  },
+  {
+    "method": "GET",
+    "url": "/favicon.ico",
+    "status": 404,
+    "time": "2025-08-21T05:09:56.467Z"
   }
 ]

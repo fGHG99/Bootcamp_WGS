@@ -4,6 +4,7 @@ const app = express();
 import morgan from "morgan";
 import { fileHandler, savingData, updateData } from "../Day_3/utils/fileHandler.js";
 import { validateEmail, validatePhone } from "../Day_3/utils/validator.js";
+import { pool }  from './views/utils/db/db.js'
 
 app.set("view engine", "ejs");
 app.set("views", "./views");
@@ -16,6 +17,16 @@ const PORT = 8080;
 const ipAddress = "localhost";
 const datapath = "../Day_3/data/data.json";
 const logPath = "./log/errors.json";
+
+async function loadContact() {
+  try {
+    const { rows: contact } = await pool.query("SELECT * FROM contact WHERE \"isDeleted\" = false");
+    return contact;
+  } catch (err) {
+    console.error(err.message);
+    return [];
+  }
+}
 
 app.use(express.static("public"));
 
@@ -62,9 +73,20 @@ app.get("/about", (req, res) => {
   res.render("about", { title: "About Page", activePage: "about" });
 });
 
-app.get("/contact", (req, res) => {
-  const contacts = fileHandler.readFileArray(datapath).filter(c => !c.isDeleted);
+// app.get("/contact", (req, res) => {
+//   const contacts = fileHandler.readFileArray(datapath).filter(c => !c.isDeleted);
 
+//   res.render("contact", {
+//     contact: contacts,
+//     errors: null,
+//     successMsg: req.query.success || null, 
+//     title: "Contact Page",
+//     activePage: "contact"
+//   });
+// });
+
+app.get("/contact", async (req, res) => {
+  const contacts = await loadContact();
   res.render("contact", {
     contact: contacts,
     errors: null,
