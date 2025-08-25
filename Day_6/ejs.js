@@ -2,6 +2,7 @@ import express from "express";
 import expressLayouts from "express-ejs-layouts";
 const app = express();
 import morgan from "morgan";
+import cors from "cors";
 import {
   fileHandler,
 } from "../Day_3/utils/fileHandler.js";
@@ -12,6 +13,13 @@ import {
   editContact,
   deleteContact
 } from "./views/utils/db/contactApi.js";
+import contactApi from "./views/utils/router/contact.js";
+
+app.use(cors({
+  origin: "http://localhost:5173",  // alamat frontend kamu
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true, // kalau butuh cookie / auth
+}));
 
 app.set("view engine", "ejs");
 app.set("views", "./views");
@@ -30,7 +38,7 @@ app.use(
   morgan("dev", {
     stream: {
       write: (message) => {
-        process.stdout.write(message); // tetap tampil di console
+        process.stdout.write(message); 
       },
     },
     skip: (req, res) => {
@@ -42,24 +50,21 @@ app.use(
           time: new Date().toISOString(),
         };
 
-        // baca dulu data log lama
         let errorsLog = [];
         try {
           errorsLog = fileHandler.readFileArray(logPath);
         } catch (err) {
-          errorsLog = []; // kalau file belum ada, mulai baru
+          errorsLog = []; 
         }
-
-        // tambah log baru
         errorsLog.push(errorEntry);
-
-        // tulis kembali ke file
         fileHandler.writeFile(logPath, errorsLog);
       }
-      return false; // jangan skip logging normal
+      return false;
     },
   })
 );
+
+app.use("/api", contactApi);
 
 app.get("/", (req, res) => {
   res.render("index", { title: "Home Page", activePage: "home" });
@@ -115,7 +120,7 @@ app.post("/contact/input", async (req, res) => {
         mobile,
       },
       showAddModal: true,
-      showEditModal: false, // <-- tambahin default
+      showEditModal: false, 
       successMsg: null,
       title: "Contact Page",
       activePage: "contact",
@@ -132,14 +137,11 @@ app.post("/contact/edit/:id", async (req, res) => {
   const contacts = await loadContact();
   const errors = [];
 
-  // === Validation ===
   if (contacts.find(c => c.name === name && c.id !== id && !c.isDeleted)) {
     errors.push({ param: "name", msg: "Name already exist" });
   }
   if (!validateEmail(email)) errors.push({ param: "email", msg: "Invalid email format" });
   if (!validatePhone(mobile)) errors.push({ param: "mobile", msg: "Invalid mobile number" });
-
-  // === Handle Errors ===
   if (errors.length > 0) {
     const errorObj = errors.reduce((acc, err) => {
       acc[err.param] = err.msg;
@@ -148,23 +150,22 @@ app.post("/contact/edit/:id", async (req, res) => {
 
     return res.status(400).render("contact", {
       contact: contacts.filter(c => !c.isDeleted),
-      editErrors: errorObj,   // khusus edit modal
-      oldEdit: { id, name, email, mobile }, // isi ulang form
+      editErrors: errorObj,   
+      oldEdit: { id, name, email, mobile }, 
       showEditModal: true,
-      showAddModal: false, // <-- tambahin default
+      showAddModal: false, 
       successMsg: null,
       title: "Contact Page",
       activePage: "contact"
     });
   }
 
-  // === Update Contact ===
   await editContact(id, name, email, mobile);
   res.redirect("/contact?success=Data successfully Modified");
 });
 
 app.post("/contact/delete/:id", async (req, res) => {
-  const { id } = req.params; // ambil id dari URL
+  const { id } = req.params; 
   const contacts = await loadContact();
   const contact = contacts.find((c) => String(c.id) === String(id));
 
