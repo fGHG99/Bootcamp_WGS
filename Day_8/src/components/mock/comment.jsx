@@ -1,7 +1,7 @@
 import { Component } from "react";
 import { faker } from '@faker-js/faker';
 import CommentItem from "./commentItem.jsx";
-import ReplyForm from "./replyForm.jsx";
+// import ReplyForm from "./replyForm.jsx";
 
 // function formatDate(date) {
 //   const now = new Date();
@@ -34,30 +34,40 @@ class DateFormatter {
 }
 
 // function Comment() {
-//   const comments = Array.from({ length: 5 }, () => {
+//   const comments = Array.from({ length: 10 }, () => {
 //     const randomDate = faker.date.recent(7); 
 //     return {
 //       author: faker.person.fullName(),
 //       avatar: faker.image.avatar(),
-//       date: DateFormatter.format(randomDate),
+//       date: formatDate(randomDate),
 //       text: faker.lorem.sentence()
 //     };
 //   });
 
+//   const getSizeClass = (count) => {
+//     if (count <= 4) return "large";
+//     if (count <= 7) return "medium";
+//     return "small";
+//   };
+
+//   const sizeClass = getSizeClass(comments.length);
+
 //   return (
 //     <div className="ui container comments">
-//       <h3 className="ui dividing header">Comments</h3>
-
-//       {comments.map((c, idx) => (
-//         <CommentItem
-//           key={idx}
-//           author={c.author}
-//           avatar={c.avatar}
-//           date={c.date}
-//           text={c.text}
-//         >   
-//         </CommentItem>
-//       ))}
+//       <h3 className="ui dividing header">Comments ({comments.length})</h3>
+      
+//       <div className={`ui ${sizeClass} comments`}>
+//         {comments.map((c, idx) => (
+//           <CommentItem
+//             key={idx}
+//             author={c.author}
+//             avatar={c.avatar}
+//             date={c.date}
+//             text={c.text}
+//             size={sizeClass}
+//           />
+//         ))}
+//       </div>
 
 //       <ReplyForm />
 //     </div>
@@ -76,16 +86,30 @@ class Comment extends Component {
           date: DateFormatter.format(randomDate),
           text: faker.lorem.sentence()
         };
-      })
+      }),
+      currentTime: new Date().toLocaleTimeString()
     };
   }
 
+  componentDidMount() {
+    this.timerID = setInterval(() => {
+      this.setState({
+        currentTime: new Date().toLocaleTimeString()
+      });
+    }, 1000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timerID);
+  }
+
   render() {
-    const { comments } = this.state;
+    const { comments, currentTime } = this.state;
 
     return (
       <div className="ui container comments">
         <h3 className="ui dividing header">Comments</h3>
+        <h3> {currentTime} </h3>
 
         {comments.map((c, idx) => (
           <CommentItem
@@ -97,10 +121,42 @@ class Comment extends Component {
           />
         ))}
 
-        <ReplyForm />
+        <Reply />
       </div>
     );
   }
 }
 
+class Reply extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { value: ""};
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleChange(event) {
+    this.setState({ value: event.target.value });
+  }
+
+  handleSubmit(event) {
+    alert("A name was submitted: " + this.state.value);
+    event.preventDefault();
+  }
+
+    render() {
+    return (
+      <form onSubmit={this.handleSubmit}>
+        <input
+          type="text"
+          value={this.state.value}
+          onChange={this.handleChange}
+        />
+        <button type="submit">Submit</button>
+      </form>
+    );
+  }
+}
+  
 export default Comment;
