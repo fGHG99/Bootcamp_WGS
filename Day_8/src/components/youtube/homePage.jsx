@@ -26,7 +26,7 @@ class HomePage extends Component {
   fetchVideos = async () => {
     try {
       const res = await fetch(
-        `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&chart=mostPopular&regionCode=US&maxResults=12&key=${this.apiKey}`
+        `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&chart=mostPopular&regionCode=US&maxResults=15&key=${this.apiKey}`
       );
       const data = await res.json();
       this.setState({ videos: data.items || [] });
