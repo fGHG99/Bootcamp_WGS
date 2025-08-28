@@ -6,8 +6,8 @@ class UnsplashExample extends React.Component {
     super(props);
     this.state = {
       photos: [],
-      query: "nature", // default query
-      searchText: "", // teks input user
+      query: "nature",
+      searchText: "",
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -20,20 +20,15 @@ class UnsplashExample extends React.Component {
 
   async fetchPhotos(query) {
     try {
-      const response = await axios.get(
-        "https://api.unsplash.com/search/photos",
-        {
-          params: {
-            query: query,
-            per_page: 12,
-          },
-          headers: {
-            Authorization: `Client-ID ${
-              import.meta.env.VITE_UNSPLASH_ACCESS_KEY
-            }`,
-          },
-        }
-      );
+      const response = await axios.get("https://api.unsplash.com/search/photos", {
+        params: {
+          query: query,
+          per_page: 20, // ambil lebih banyak supaya masonry terisi penuh
+        },
+        headers: {
+          Authorization: `Client-ID ${import.meta.env.VITE_UNSPLASH_ACCESS_KEY}`,
+        },
+      });
 
       this.setState({ photos: response.data.results });
     } catch (error) {
@@ -54,45 +49,84 @@ class UnsplashExample extends React.Component {
 
   render() {
     return (
-      <div className="p-4">
-        {/* Search Form */}
-        <form onSubmit={this.handleSubmit} className="mb-6 flex gap-2">
+      <div style={{ padding: "20px" }}>
+        <form
+          onSubmit={this.handleSubmit}
+          style={{ marginBottom: "20px", display: "flex", gap: "10px" }}
+        >
           <input
             type="text"
             value={this.state.searchText}
             onChange={this.handleChange}
             placeholder="Search photos..."
-            className="border px-4 py-2 rounded-lg w-full"
+            style={{
+              flex: 1,
+              padding: "10px",
+              borderRadius: "8px",
+              border: "1px solid #ccc",
+            }}
           />
           <button
             type="submit"
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg"
+            style={{
+              background: "#2563eb",
+              color: "white",
+              padding: "10px 20px",
+              borderRadius: "8px",
+              border: "none",
+              cursor: "pointer",
+            }}
           >
             Search
           </button>
         </form>
 
-        {/* Photo Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="masonry">
           {this.state.photos.length > 0 ? (
             this.state.photos.map((photo) => (
-              <div
-                key={photo.id}
-                className="overflow-hidden rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 h-64"
-              >
+              <div key={photo.id} className="masonry-item">
                 <img
                   src={photo.urls.small}
                   alt={photo.alt_description || "Unsplash photo"}
-                  className="w-full h-full object-cover"
+                  style={{
+                    width: "100%",
+                    display: "block",
+                    borderRadius: "12px",
+                  }}
                 />
               </div>
             ))
           ) : (
-            <p className="text-gray-500 col-span-full text-center py-10">
+            <p style={{ textAlign: "center", color: "#666", padding: "20px" }}>
               No photos found.
             </p>
           )}
         </div>
+
+        {/* CSS Masonry */}
+        <style>{`
+          .masonry {
+            column-count: 4;     /* jumlah kolom */
+            column-gap: 16px;    /* jarak antar kolom */
+            width: 100%;         /* penuh lebar container */
+          }
+
+          .masonry-item {
+            break-inside: avoid; /* jangan biarkan item terpotong */
+            margin-bottom: 16px; /* jarak antar gambar */
+          }
+
+          /* Responsive */
+          @media (max-width: 1200px) {
+            .masonry { column-count: 3; }
+          }
+          @media (max-width: 768px) {
+            .masonry { column-count: 2; }
+          }
+          @media (max-width: 480px) {
+            .masonry { column-count: 1; }
+          }
+        `}</style>
       </div>
     );
   }
