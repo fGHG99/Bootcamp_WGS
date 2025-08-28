@@ -1,7 +1,7 @@
 import { Component } from "react";
 import { faker } from '@faker-js/faker';
 import CommentItem from "./commentItem.jsx";
-// import ReplyForm from "./replyForm.jsx";
+import ReplyForm from "./replyForm.jsx";
 
 // function formatDate(date) {
 //   const now = new Date();
@@ -121,42 +121,11 @@ class Comment extends Component {
           />
         ))}
 
-        <Reply />
+        <ReplyForm />
       </div>
     );
   }
 }
 
-class Reply extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { value: ""};
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  handleChange(event) {
-    this.setState({ value: event.target.value });
-  }
-
-  handleSubmit(event) {
-    alert("A name was submitted: " + this.state.value);
-    event.preventDefault();
-  }
-
-    render() {
-    return (
-      <form onSubmit={this.handleSubmit}>
-        <input
-          type="text"
-          value={this.state.value}
-          onChange={this.handleChange}
-        />
-        <button type="submit">Submit</button>
-      </form>
-    );
-  }
-}
   
 export default Comment;

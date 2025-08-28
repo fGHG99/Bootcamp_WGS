@@ -44,9 +44,6 @@ class HomePage extends Component {
 
     return (
       <div style={{ padding: "20px" }}>
-        <h1 style={{ fontSize: "22px", fontWeight: "bold", marginBottom: "20px" }}>
-          YouTube Home
-        </h1>
         <div
           style={{
             display: "grid",
