@@ -7,6 +7,8 @@ import Clock from './components/mock/clock';
 import YoutubePlayerPage from './components/youtube/youtubeVideoPage';
 import Layout from './components/layout';
 import NotFound from "./components/notFound";
+import { Counter } from "./components/redux/counter.jsx";
+import JobApplication from "./components/redux/jobApplication.jsx";
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
         <Route path="/youtube" element={<Layout><HomePage /></Layout>} />
         <Route path="/youtube/:videoId" element={<Layout><YoutubePlayerPage /></Layout>} />
         <Route path="/clock" element={<Layout><Clock /></Layout>} />
+        <Route path="/redux" element={<Layout><Counter /></Layout>} />
+        <Route path="/job-application" element={<Layout><JobApplication /></Layout>} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
