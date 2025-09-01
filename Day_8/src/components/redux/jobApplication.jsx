@@ -1,4 +1,3 @@
-import React from "react";
 import { useForm } from "react-hook-form";
 
 export default function CheckboxForms() {
@@ -7,6 +6,7 @@ export default function CheckboxForms() {
     handleSubmit,
     formState: { errors },
     watch,
+    reset,
   } = useForm();
 
   const onSubmit = (data) => {
@@ -14,18 +14,22 @@ export default function CheckboxForms() {
     alert(JSON.stringify(data, null, 2));
   };
 
-  // Watch semua field untuk melihat nilai secara real-time
+  const resetForm = () => {
+    const currentValues = watch(); // ambil semua field aktif
+    const clearedValues = Object.keys(currentValues).reduce((acc, key) => {
+      acc[key] = null; // set ke null
+      return acc;
+    }, {});
+    reset(clearedValues); // update form state & input
+  };
+
   const allValues = watch();
 
-  // Filter untuk hanya menampilkan nilai yang true atau terisi
   const watchedValues = Object.entries(allValues).reduce(
     (acc, [key, value]) => {
-      // Untuk checkbox, hanya tampilkan jika true
       if (typeof value === "boolean" && value === true) {
         acc[key] = value;
-      }
-      // Untuk nested objects (hobi, skill, expertise)
-      else if (typeof value === "object" && value !== null) {
+      } else if (typeof value === "object" && value !== null) {
         const filteredNested = Object.entries(value).reduce(
           (nestedAcc, [nestedKey, nestedValue]) => {
             if (nestedValue === true) {
@@ -38,9 +42,7 @@ export default function CheckboxForms() {
         if (Object.keys(filteredNested).length > 0) {
           acc[key] = filteredNested;
         }
-      }
-      // Untuk input text, tampilkan jika ada nilai
-      else if (typeof value === "string" && value.trim() !== "") {
+      } else if (typeof value === "string" && value.trim() !== "") {
         acc[key] = value;
       }
       return acc;
@@ -229,9 +231,7 @@ export default function CheckboxForms() {
         </div>
 
         <div className="space-y-2">
-          <h3 className="text-lg font-semibold text-gray-700">
-            Notes
-          </h3>
+          <h3 className="text-lg font-semibold text-gray-700">Notes</h3>
 
           <textarea
             {...register("notes", { required: true })}
@@ -245,13 +245,20 @@ export default function CheckboxForms() {
           </p>
         </div>
 
-        {/* Submit Button */}
-        <button
-          onClick={handleSubmit(onSubmit)}
-          className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
-        >
-          Submit
-        </button>
+        <div className="flex gap-4">
+          <button
+            onClick={handleSubmit(onSubmit)}
+            className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+          >
+            Submit
+          </button>
+          <button
+            onClick={resetForm}
+            className="flex-1 bg-gray-600 text-white py-2 px-4 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+          >
+            Reset
+          </button>
+        </div>
       </div>
 
       {/* Preview Data */}
